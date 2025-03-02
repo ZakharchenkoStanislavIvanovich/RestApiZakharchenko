@@ -1,8 +1,7 @@
-from flask import Flask
-from library.routes import books_bp
+from fastapi import FastAPI
+from library.routes import books_router
 
 def create_app():
-    app = Flask(__name__)
-    app.config["JSON_SORT_KEYS"] = False
-    app.register_blueprint(books_bp, url_prefix="/books")
+    app = FastAPI(title="Library API")
+    app.include_router(books_router, prefix="/books")
     return app

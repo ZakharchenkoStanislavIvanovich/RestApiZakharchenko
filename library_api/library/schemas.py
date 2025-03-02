@@ -1,16 +1,6 @@
-from marshmallow import Schema, fields, validates, ValidationError
+from pydantic import BaseModel, Field
 
-class BookSchema(Schema):
-    book_id = fields.Int(required=True)
-    title = fields.Str(required=True)
-    author = fields.Str(required=True)
-
-    @validates("title")
-    def validate_title(self, value):
-        if len(value) < 2:
-            raise ValidationError("Title must be at least 2 characters long.")
-
-    @validates("author")
-    def validate_author(self, value):
-        if len(value) < 2:
-            raise ValidationError("Author must be at least 2 characters long.")
+class BookSchema(BaseModel):
+    book_id: int
+    title: str = Field(..., min_length=2, description="Назва має бути не менше 2 символів")
+    author: str = Field(..., min_length=2, description="Автор має бути не менше 2 символів")

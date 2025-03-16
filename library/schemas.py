@@ -1,7 +1,6 @@
 from marshmallow import Schema, fields, validates, ValidationError
 
 class BookSchema(Schema):
-    book_id = fields.Int(required=True)
     title = fields.Str(required=True)
     author = fields.Str(required=True)
 

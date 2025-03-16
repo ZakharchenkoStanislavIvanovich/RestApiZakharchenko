@@ -1,5 +1,5 @@
 from flask import Flask
-from library.routes import books_bp
+from .routes import books_bp
 
 def create_app():
     app = Flask(__name__)

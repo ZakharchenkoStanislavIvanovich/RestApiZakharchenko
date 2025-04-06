@@ -11,12 +11,24 @@ books_schema = BookSchema(many=True)
 def get_books():
     try:
         limit = int(request.args.get("limit", 5))
-        offset = int(request.args.get("offset", 0))
+        cursor = request.args.get("cursor")
     except ValueError:
         return jsonify({"error": "Invalid pagination parameters"}), 400
 
-    books_query = Book.query.offset(offset).limit(limit).all()
-    return jsonify([book.to_dict() for book in books_query])
+    if cursor:
+        books_query = Book.query.filter(Book.book_id > cursor).limit(limit).all()
+    else:
+        books_query = Book.query.limit(limit).all()
+
+    if books_query:
+        next_cursor = books_query[-1].book_id
+        return jsonify({
+            "books": [book.to_dict() for book in books_query],
+            "next_cursor": next_cursor
+        })
+    else:
+        return jsonify({"books": []})
+
 
 @books_bp.route("/<int:book_id>", methods=["GET"])
 def get_book(book_id):
